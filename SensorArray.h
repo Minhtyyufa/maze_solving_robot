@@ -17,15 +17,19 @@ class SensorArray
     Vector<int> sensorThresholds;
     
   public:
+    
+
+    
     SensorArray(Vector<int> sensors, Vector<int> sensorThresholds);
     bool isLeftMostOn();
     bool isRightMostOn();
     bool isLeftOn();
     bool isRightOn();
     bool isJustMiddleOn();
+    void getMiddles(bool values[]);
     
     void updateSensors();
-
+  
     void printSensorValues();
 };
 

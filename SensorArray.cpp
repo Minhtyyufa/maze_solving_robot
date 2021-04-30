@@ -28,11 +28,6 @@ void SensorArray::updateSensors(){
   }
 }
 
-    bool isLeftMostOn();
-    bool isRightMostOn();
-    bool isLeftOn();
-    bool isRightOn();
-    bool isMiddleOn();
 
 bool SensorArray::isLeftMostOn(){
   return this->sensorValues[0];
@@ -55,6 +50,30 @@ bool SensorArray::isJustMiddleOn() {
     }
   }
   return true;
+}
+
+//bool SensorArray::isJustMiddleOn() {
+//  for(int i = 0; i < this->sensorValues.size(); i++){
+//    if(i == this->sensorValues.size()/2){
+//      if(!this->sensorValues[i]){
+//        return false; 
+//      } 
+//    } else {
+//      if(this->sensorValues[i]){
+//        return false;
+//      }
+//    }
+//  }
+//  return true;
+//}
+
+// returns values of the three middle sensors
+void SensorArray::getMiddles(bool values[]) {
+  int middleSensor = this->sensorValues.size()/2;
+  values[0] = this->sensorValues[middleSensor-1];
+  values[1] = this->sensorValues[middleSensor];
+  values[2] = this->sensorValues[middleSensor+1];
+  return values;
 }
 
 bool SensorArray::isLeftOn(){

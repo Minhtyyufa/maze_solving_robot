@@ -30,12 +30,12 @@ void MotorController::turn_left(int velocity){
   analogWrite(3, velocity);   //Spins the motor on Channel A at full speed
 
   //Motor B stop
-  digitalWrite(8, LOW);   //Engage the Brake for Channel B
+  digitalWrite(8, HIGH);   //Engage the Brake for Channel B
 }
 
 void MotorController::turn_right(int velocity){
   //Motor A stop
-  digitalWrite(9, LOW);   //Engage the Brake for Channel A
+  digitalWrite(9, HIGH);   //Engage the Brake for Channel A
 
   //Motor B forward @ full speed
   digitalWrite(13, HIGH); //Establishes forward direction of Channel B
@@ -45,10 +45,10 @@ void MotorController::turn_right(int velocity){
 
 void MotorController::brake(){
   //Motor A stop
-  digitalWrite(9, LOW);   //Engage the Brake for Channel A
+  digitalWrite(9, HIGH);   //Engage the Brake for Channel A
 
   //Motor B stop
-  digitalWrite(8, LOW);   //Engage the Brake for Channel B
+  digitalWrite(8, HIGH);   //Engage the Brake for Channel B
 }
 
 

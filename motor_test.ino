@@ -24,9 +24,9 @@ void setup() {
   sensorThresholds.setStorage(storage_array1);
   sensorThresholds.push_back(200);
   sensorThresholds.push_back(200);
+  sensorThresholds.push_back(300);
   sensorThresholds.push_back(200);
-  sensorThresholds.push_back(200);
-  sensorThresholds.push_back(200);
+  sensorThresholds.push_back(250);
   sensorArray = new SensorArray(sensors, sensorThresholds);
   
   
@@ -38,15 +38,31 @@ void loop(){
   
   sensorArray->updateSensors();
   sensorArray->printSensorValues();
-  //decideWhereToGo();
-  //delay(100);
+  decideWhereToGo();
+
 
   
 }
 
 
 void decideWhereToGo(){
-  if(sensorArray->isJustMiddleOn()){
-    motorController.go_straight(255);
+  bool middles[3];
+  sensorArray->getMiddles(middles);
+  if(sensorArray->isLeftMostOn()){
+ 
+    motorController.turn_left(128);
+  } else if(middles[0] && middles[2]){
+    Serial.println("I go straight");
+    motorController.go_straight(128);
+  }  else if (middles[0] && !middles[2]){
+    Serial.println("turn left");
+    motorController.turn_left(128);
+  } else if (!middles[0] && middles[2]){
+//        Serial.println("turn right");
+    motorController.turn_right(128);  
+  }else if (sensorArray->isRightMostOn()) {
+    motorController.turn_right(128);
+  } else {
+    //motorController.brake();
   }
 }
