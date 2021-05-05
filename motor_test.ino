@@ -5,6 +5,10 @@ MotorController motorController;
 
 SensorArray* sensorArray = NULL;
 unsigned long time_since_not_left = millis();
+bool wasOn = false;
+unsigned long currentTime;
+bool finished = false;
+bool wasStraight = false;
 
 void setup() {
   Serial.begin(9600);
@@ -24,7 +28,7 @@ void setup() {
   
   Vector<int> sensorThresholds;
   sensorThresholds.setStorage(storage_array1);
-  sensorThresholds.push_back(200);
+  sensorThresholds.push_back(250);
   sensorThresholds.push_back(200);
   sensorThresholds.push_back(300);
   sensorThresholds.push_back(200);
@@ -68,30 +72,56 @@ void decideWhereToGo(){
   sensorArray->getMiddles(middles);
   bool ignoreLeft = millis() - time_since_not_left > 1000;
   
-  if (!ignoreLeft && middles[0] && !middles[2]){
-    Serial.println("turn left");
-    motorController.turn_left(128);
-  } else if(!ignoreLeft && sensorArray->isLeftMostOn()){
-    
-    motorController.turn_left(128);
-    delay(1000);
-  } else if(!ignoreLeft && middles[0] && middles[2]){
-    Serial.println("I go straight");
-    motorController.go_straight(128);
-  } else if (!middles[0] && middles[2]){
-    
-//        Serial.println("turn right");
-    time_since_not_left = millis();
-    motorController.turn_right(128);  
-    if(ignoreLeft)
-      delay(500);
-  }else if (sensorArray->isRightMostOn()) {
-    time_since_not_left = millis();
-    motorController.turn_right(128);
-    if(ignoreLeft)
-      delay(500);
-    
-  } else {
-    //motorController.brake();
+  if (sensorArray->areAllOn()){
+    Serial.println("ALL ON");
+    if (!wasOn){
+      currentTime = millis();
+      wasOn = true;
+    }
+    else if (millis() - currentTime >= 500 ){
+      motorController.brake();
+      Serial.println("STOPPED");
+      finished = true;
+    }
   }
+  else{
+    wasOn = false; 
+  }
+
+  if (!finished){
+    
+    if (!ignoreLeft && middles[0] && !middles[2]){
+      Serial.println("turn left");
+      motorController.turn_left(128);
+    } else if(!ignoreLeft && sensorArray->isLeftMostOn()){
+      wasStraight = false;
+      motorController.turn_left(128);
+      delay(1500);
+    } else if(!ignoreLeft && middles[0] && middles[2]){
+      Serial.println("I go straight");
+      motorController.go_straight(64);
+      wasStraight = true;
+    } else if (!middles[0] && middles[2]){
+      wasStraight = false;
+      
+  //        Serial.println("turn right");
+      time_since_not_left = millis();
+      motorController.turn_right(128);  
+      if(ignoreLeft)
+        delay(500);
+    }else if (sensorArray->isRightMostOn()) {
+      wasStraight = false;
+      time_since_not_left = millis();
+      motorController.turn_right(128);
+      if(ignoreLeft)
+        delay(500);
+      
+    } else if(wasStraight && sensorArray->areAllOff()){
+        motorController.turn_left(128);
+    } 
+    else {
+      //motorController.brake();
+    }
+  }
+
 }

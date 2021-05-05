@@ -26,6 +26,8 @@ class SensorArray
     bool isLeftOn();
     bool isRightOn();
     bool isJustMiddleOn();
+    bool areAllOn();
+    bool areAllOff();
     void getMiddles(bool values[]);
     
     void updateSensors();

@@ -73,7 +73,6 @@ void SensorArray::getMiddles(bool values[]) {
   values[0] = this->sensorValues[middleSensor-1];
   values[1] = this->sensorValues[middleSensor];
   values[2] = this->sensorValues[middleSensor+1];
-  return values;
 }
 
 bool SensorArray::isLeftOn(){
@@ -94,6 +93,24 @@ bool SensorArray::isRightOn(){
   }
 
   return false;
+}
+
+bool SensorArray::areAllOn(){
+  for(int i = 0; i < this->sensorValues.size(); i++){
+    if(!this->sensorValues[i]){
+      return false;
+    }
+  }
+  return true;
+}
+
+bool SensorArray::areAllOff(){
+  for(int i = 0; i < this->sensorValues.size(); i++){
+    if(this->sensorValues[i]){
+      return false;
+    }
+  }
+  return true;
 }
 
 void SensorArray::printSensorValues(){
